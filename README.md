@@ -163,141 +163,197 @@ Suggested Support Team
 ```text
 complaint-classifier/
 │
-├── app.py                    # Flask inference application
-├── preprocess.py             # Text cleaning and preprocessing
-├── train.py                  # Data preparation, training and evaluation
+├── app.py
+├── preprocess.py
+├── train.py
 │
 ├── templates/
-│   └── index.html            # Web application interface
+│   └── index.html
 │
-├── model.pkl                 # Selected trained model
-├── lr_model.pkl              # Logistic Regression model for explanations
-├── vectorizer.pkl            # Trained TF-IDF vectorizer
-├── label_encoder.pkl         # Encoded class labels
-├── model_info.pkl            # Model metadata and evaluation results
+├── model.pkl
+├── lr_model.pkl
+├── vectorizer.pkl
+├── label_encoder.pkl
+├── model_info.pkl
 │
-├── confusion_matrix.png      # Best-model confusion matrix
-│
-├── requirements.txt          # Python dependencies
-├── Dockerfile                # Docker image configuration
-├── docker-compose.yml         # Docker Compose configuration
-└── test_preprocess.py        # Preprocessing tests
+├── confusion_matrix.png
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+└── test_preprocess.py
+```
 
-Installation
-1. Clone the repository
+## Installation
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/adreejaa-dash/complaint-classifier.git
 cd complaint-classifier/complaint-classifier
-2. Create a virtual environment
+```
+
+### 2. Create a Virtual Environment
+
+```bash
 python -m venv venv
+```
 
 Activate it on macOS/Linux:
 
+```bash
 source venv/bin/activate
+```
 
 On Windows:
 
+```bash
 venv\Scripts\activate
-3. Install dependencies
+```
+
+### 3. Install Dependencies
+
+```bash
 pip install -r requirements.txt
-4. Download required NLTK resources
+```
+
+### 4. Download Required NLTK Resources
+
+```bash
 python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt'); nltk.download('punkt_tab')"
-Training the Models
+```
 
-The training script expects the customer-support dataset at:
+## Training the Models
 
+The training pipeline expects the customer-support dataset at:
+
+```text
 data/hf_customer_support.csv
+```
 
 with the following columns:
 
+```text
 instruction
 intent
+```
 
-Run:
+Run the training script:
 
+```bash
 python train.py
+```
 
 The training pipeline:
 
-Loads and cleans the dataset
-Maps original intents to broader complaint categories
-Removes unsupported or low-frequency categories
-Performs a stratified train-test split
-Generates TF-IDF features
-Trains multiple classification models
-Evaluates each model
-Selects the best model using macro F1-score
-Saves the trained model and preprocessing artifacts
-Generates a confusion matrix
-Running the Web Application
+- Loads and cleans the dataset
+- Maps the original intents into broader complaint categories
+- Removes unsupported or low-frequency categories
+- Performs an 80/20 stratified train-test split
+- Generates TF-IDF features using unigrams and bigrams
+- Trains multiple classification models
+- Evaluates model performance using accuracy, precision, recall, and macro F1-score
+- Automatically selects the best-performing model based on macro F1-score
+- Saves the trained model and preprocessing artifacts
+- Generates a confusion matrix
 
-After the trained model artifacts are available:
+## Running the Web Application
 
+After the trained model artifacts are available, run:
+
+```bash
 python app.py
-
-The application runs on:
-
-http://127.0.0.1:5001
-
-Enter a customer complaint into the interface to receive:
-
-Predicted complaint category
-Confidence score
-Model used
-Model accuracy
-Influential words
-Suggested support team
-Running with Docker
-Build the Image
-docker build -t ecom-classifier .
-Run the Container
-docker run -p 5001:5001 ecom-classifier
-
-Then open:
-
-http://localhost:5001
-Using Docker Compose
-docker compose up --build
+```
 
 The application will be available at:
 
+```text
+http://127.0.0.1:5001
+```
+
+Enter a customer complaint into the interface to receive:
+
+- Predicted complaint category
+- Prediction confidence
+- Model information
+- Influential words contributing to the prediction
+- Recommended support team
+
+## Running with Docker
+
+### Build the Image
+
+```bash
+docker build -t ecom-classifier .
+```
+
+### Run the Container
+
+```bash
+docker run -p 5001:5001 ecom-classifier
+```
+
+Then open:
+
+```text
 http://localhost:5001
-Technologies Used
-Programming
-Python
-Data & Machine Learning
-Pandas
-NumPy
-Scikit-learn
-XGBoost
-Joblib
-Natural Language Processing
-NLTK
-TF-IDF Vectorization
-Text Classification
-Visualization
-Matplotlib
-Seaborn
-Confusion Matrix
-Web Development
-Flask
-HTML/CSS
-Deployment
-Docker
-Docker Compose
-Why This Project?
+```
 
-The project demonstrates how an unstructured customer-support problem can be transformed into a practical machine learning workflow:
+### Using Docker Compose
 
-Raw Text → NLP Preprocessing → Feature Engineering → Model Comparison → Classification → Explainability → Automated Routing
+```bash
+docker compose up --build
+```
 
-Rather than stopping at model training, the project packages the trained model into a usable web application and adds an operational routing layer that maps predicted complaint categories to the appropriate support team.
+The application will be available at:
 
-Future Improvements
-Add probability calibration for more reliable confidence scores
-Introduce class-specific evaluation and detailed error analysis
-Experiment with transformer-based text representations
-Add authentication and persistent ticket storage
-Add batch CSV complaint classification
-Introduce an API endpoint for integration with existing support systems
-Add automated model retraining when new labeled complaints become available
-Expand the routing layer to support configurable business workflows
+```text
+http://localhost:5001
+```
+
+## Technologies Used
+
+- **Python**
+- **Pandas**
+- **NumPy**
+- **Scikit-learn**
+- **XGBoost**
+- **NLTK**
+- **TF-IDF**
+- **Flask**
+- **Matplotlib**
+- **Seaborn**
+- **Joblib**
+- **Docker**
+- **Docker Compose**
+- **HTML/CSS**
+
+## Why This Project?
+
+This project demonstrates an end-to-end machine learning workflow for automating customer-support ticket classification.
+
+It transforms unstructured customer complaints into actionable support categories using NLP and supervised machine learning, while also providing prediction confidence, explainability, and automated team routing.
+
+**Raw Complaint → Text Preprocessing → TF-IDF Features → Model Prediction → Complaint Category → Explanation → Support-Team Routing**
+
+The project goes beyond model training by integrating the trained classifier into a Flask web application and adding a practical routing layer for customer-support workflows.
+
+## Future Improvements
+
+- Improve confidence calibration for more reliable prediction probabilities
+- Perform deeper class-wise error analysis
+- Experiment with transformer-based NLP models
+- Add batch complaint classification through CSV upload
+- Provide a REST API for external integrations
+- Add persistent storage for classified complaints
+- Implement automated model retraining with newly labeled data
+- Allow configurable support-team routing rules
+
+## License
+
+This project is intended for educational and portfolio purposes.
+
+
+Then continue with:
+
+```markdown
+## Installation
