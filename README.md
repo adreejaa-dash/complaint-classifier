@@ -353,7 +353,3 @@ The project goes beyond model training by integrating the trained classifier int
 This project is intended for educational and portfolio purposes.
 
 
-Then continue with:
-
-```markdown
-## Installation
